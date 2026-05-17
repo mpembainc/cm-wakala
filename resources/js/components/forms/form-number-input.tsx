@@ -13,6 +13,7 @@ type Props = {
   value?: string | number;
   onChange?: (value?: number) => void;
   min?: number;
+  getInputRef?: React.Ref<any>;
 };
 
 const FormNumber = ({
@@ -25,6 +26,7 @@ const FormNumber = ({
   readOnly,
   disabled,
   min,
+  getInputRef,
 }: Props) => {
   return (
       <div className="space-y-1">
@@ -41,6 +43,7 @@ const FormNumber = ({
               readOnly={readOnly}
               disabled={disabled}
               min={min}
+              getInputRef={getInputRef}
           />
           <FormError error={error} />
       </div>
