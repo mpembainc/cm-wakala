@@ -1,4 +1,5 @@
 import AppLayout from '../../layouts/AppLayout';
+import { formatCurrency } from '../../utils';
 
 interface Summary {
     transactionCount: number;
@@ -84,34 +85,38 @@ export default function Dashboard({ summary, user, filter }: Props) {
         },
     };
 
-    const fmt = (v: number) =>
-        v.toLocaleString('en-KE', { style: 'currency', currency: 'KES', maximumFractionDigits: 0 });
-
     return (
         <AppLayout user={user} title="Dashboard">
-            {/* Filter bar */}
-            {canShowSummary && (
-                <div className="mb-6 flex flex-wrap gap-2">
-                    {[
-                        { label: 'Today', value: '' },
-                        { label: 'This Week', value: 'week' },
-                        { label: 'This Month', value: 'month' },
-                        { label: 'This Year', value: 'year' },
-                    ].map(({ label, value }) => (
-                        <a
-                            key={value}
-                            href={value ? `/dashboard?filter=${value}` : '/dashboard'}
-                            className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
-                                ${filter === value
-                                    ? 'bg-gray-900 text-white border-gray-900'
-                                    : 'bg-white text-gray-600 border-gray-300 hover:border-gray-500'
-                                }`}
-                        >
-                            {label}
-                        </a>
-                    ))}
+            {/* Header bar with Greeting and Filters */}
+            <div className="mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-900">Habari, {user.name}!</h2>
+                    <p className="text-sm text-gray-500">Hapa kuna muhtasari wa biashara yako leo.</p>
                 </div>
-            )}
+
+                {canShowSummary && (
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            { label: 'Today', value: '' },
+                            { label: 'This Week', value: 'week' },
+                            { label: 'This Month', value: 'month' },
+                            { label: 'This Year', value: 'year' },
+                        ].map(({ label, value }) => (
+                            <a
+                                key={value}
+                                href={value ? `/dashboard?filter=${value}` : '/dashboard'}
+                                className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-colors
+                                    ${filter === value
+                                        ? 'bg-gray-900 text-white border-gray-900'
+                                        : 'bg-white text-gray-600 border-gray-300 hover:border-gray-500'
+                                    }`}
+                            >
+                                {label}
+                            </a>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {/* Stat cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
@@ -122,13 +127,13 @@ export default function Dashboard({ summary, user, filter }: Props) {
                             key={label}
                             className={`rounded-2xl border p-5 flex items-center gap-4 ${c.bg}`}
                         >
-                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${c.icon}`}>
+                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shrink-0 ${c.icon}`}>
                                 <Icon className="w-6 h-6" />
                             </div>
                             <div className="min-w-0">
                                 <p className="text-xs font-medium text-gray-500 mb-0.5">{label}</p>
                                 <p className={`text-xl font-bold truncate ${c.badge}`}>
-                                    {type === 'currency' ? fmt(value) : value.toLocaleString()}
+                                    {type === 'currency' ? formatCurrency(value) : value.toLocaleString()}
                                 </p>
                             </div>
                         </div>

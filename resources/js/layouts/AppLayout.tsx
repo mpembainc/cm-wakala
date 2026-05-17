@@ -1,4 +1,4 @@
-import { Link, router } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import { ReactNode, useState } from 'react';
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
 }
 
 export default function AppLayout({ children, user, title }: Props) {
+    const { url } = usePage();
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
 
@@ -41,11 +42,11 @@ export default function AppLayout({ children, user, title }: Props) {
                     fixed inset-y-0 left-0 w-60 bg-gray-900 z-30 flex flex-col
                     transition-transform duration-300 ease-in-out
                     ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-                    lg:relative lg:translate-x-0 lg:flex-shrink-0
+                    lg:relative lg:translate-x-0 lg:shrink-0
                 `}
             >
                 {/* Logo */}
-                <div className="flex items-center gap-3 px-4 h-14 border-b border-white/10 flex-shrink-0">
+                <div className="flex items-center gap-3 px-4 h-14 border-b border-white/10 shrink-0">
                     <img src="/logo.jpg" alt="logo" className="w-8 h-8 rounded-lg object-cover" />
                     <span className="text-white font-semibold text-sm leading-tight truncate">
                         {import.meta.env.VITE_APP_NAME}
@@ -54,23 +55,32 @@ export default function AppLayout({ children, user, title }: Props) {
 
                 {/* Nav — scrollable */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
-                    {navItems.map(({ href, label, icon: Icon }) => (
-                        <Link
-                            key={href}
-                            href={href}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:bg-white/10 hover:text-white transition-colors group"
-                        >
-                            <Icon className="w-4 h-4 flex-shrink-0 group-hover:opacity-100 opacity-70" />
-                            {label}
-                        </Link>
-                    ))}
+                    {navItems.map(({ href, label, icon: Icon }) => {
+                        const isActive = url.startsWith(href);
+                        return (
+                            <Link
+                                key={href}
+                                href={href}
+                                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors group ${
+                                    isActive
+                                        ? 'bg-white/10 text-white font-medium'
+                                        : 'text-gray-400 hover:bg-white/10 hover:text-white'
+                                }`}
+                            >
+                                <Icon className={`w-4 h-4 shrink-0 transition-opacity ${
+                                    isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
+                                }`} />
+                                {label}
+                            </Link>
+                        );
+                    })}
                 </nav>
             </aside>
 
             {/* Right column */}
             <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
                 {/* Topbar */}
-                <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-4 flex-shrink-0">
+                <header className="h-14 bg-white border-b border-gray-200 flex items-center px-4 gap-4 shrink-0">
                     {/* Mobile hamburger */}
                     <button
                         className="lg:hidden p-1.5 rounded-md text-gray-500 hover:bg-gray-100"
