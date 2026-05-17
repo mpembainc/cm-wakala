@@ -13,6 +13,17 @@ export function formatCurrency(value: number): string {
 }
 
 /**
+ * Formats a numeric value into a number format with thousands separator and decimal places.
+ * E.g., 100000 -> 100,000 or 100,000.00
+ */
+export function formatNumber(value: number, decimals: number = 0): string {
+    return new Intl.NumberFormat('en-TZ', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+    }).format(value);
+}
+
+/**
  * Formats a ISO date string into DD-MM-YYYY hh:mm A.
  */
 export function formatDate(date: string): string {

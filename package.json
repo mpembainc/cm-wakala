@@ -24,6 +24,7 @@
         "@fontsource-variable/figtree": "^5.2.10",
         "@inertiajs/react": "^3.1.1",
         "@inertiajs/vite": "^3.1.1",
+        "@tanstack/react-table": "^8.21.3",
         "@vitejs/plugin-react": "^6.0.2",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
