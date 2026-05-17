@@ -98,7 +98,7 @@ export default function AppLayout({ children, user, title }: Props) {
                             onClick={() => setUserMenuOpen(!userMenuOpen)}
                             className="flex items-center gap-2.5 px-2 py-1.5 rounded-lg hover:bg-gray-100 transition-colors"
                         >
-                            <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                            <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                                 {user.name.charAt(0).toUpperCase()}
                             </div>
                             <span className="text-sm font-medium text-gray-700 hidden sm:block">{user.name}</span>

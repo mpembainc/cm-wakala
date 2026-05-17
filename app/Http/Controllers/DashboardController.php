@@ -41,6 +41,30 @@ class DashboardController extends Controller
                 'networkCount'     => Network::count(),
                 'cashBalance'      => floatval(Cash::sum('amount')),
             ],
+            'latestTransactions' => Transaction::with(['network', 'user'])
+                ->latest('id')
+                ->limit(20)
+                ->get()
+                ->map(function ($transaction) {
+                    return [
+                        'id' => $transaction->id,
+                        'network' => $transaction->network ? [
+                            'id' => $transaction->network->id,
+                            'name' => $transaction->network->name,
+                        ] : null,
+                        'account_number' => $transaction->account_number,
+                        'account_name' => $transaction->account_name,
+                        'amount' => floatval($transaction->amount),
+                        'customer' => $transaction->customer,
+                        'commission' => $transaction->commission ? floatval($transaction->commission) : 0,
+                        'fee' => $transaction->fee ? floatval($transaction->fee) : 0,
+                        'user' => $transaction->user ? [
+                            'id' => $transaction->user->id,
+                            'name' => $transaction->user->name,
+                        ] : null,
+                        'created_at' => $transaction->created_at->toISOString(),
+                    ];
+                }),
             'user' => [
                 'name'        => $user->name,
                 'permissions' => $user->hasRole('admin')

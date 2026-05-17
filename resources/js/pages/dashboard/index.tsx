@@ -1,5 +1,6 @@
 import AppLayout from '../../layouts/AppLayout';
-import { formatCurrency } from '../../utils';
+import { formatCurrency, formatDate } from '../../utils';
+import Table, { Column } from '../../components/Table';
 
 interface Summary {
     transactionCount: number;
@@ -8,13 +9,27 @@ interface Summary {
     cashBalance: number;
 }
 
+interface Transaction {
+    id: number;
+    network: { id: number; name: string } | null;
+    account_number: string;
+    account_name: string;
+    amount: number;
+    customer: string | null;
+    commission: number | null;
+    fee: number | null;
+    user: { id: number; name: string } | null;
+    created_at: string;
+}
+
 interface Props {
     summary: Summary;
     user: { name: string; permissions: string[] };
     filter: string;
+    latestTransactions: Transaction[];
 }
 
-export default function Dashboard({ summary, user, filter }: Props) {
+export default function Dashboard({ summary, user, filter, latestTransactions }: Props) {
     const canShowSummary = user.permissions.includes('show_summary');
     const canShowCash = user.permissions.includes('show_cash_balance');
     const canShowNetworks = user.permissions.includes('list_networks');
@@ -85,6 +100,93 @@ export default function Dashboard({ summary, user, filter }: Props) {
         },
     };
 
+    const columns: Column<Transaction>[] = [
+        {
+            header: 'Na.',
+            className: 'w-16 text-center text-gray-400 font-semibold',
+            render: (_, index) => <span className="text-gray-400 font-semibold">#{index + 1}</span>,
+        },
+        {
+            header: 'Tarehe',
+            className: 'whitespace-nowrap text-gray-600 font-medium',
+            render: (tx) => <span>{formatDate(tx.created_at)}</span>,
+        },
+        {
+            header: 'Mtandao',
+            className: 'whitespace-nowrap font-semibold',
+            render: (tx) => {
+                const networkName = tx.network?.name || 'N/A';
+                return (
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200">
+                        {networkName}
+                    </span>
+                );
+            },
+        },
+        {
+            header: 'Aina',
+            className: 'whitespace-nowrap',
+            render: (tx) => {
+                const isDeposit = tx.amount < 0;
+                return (
+                    <span
+                        className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border ${
+                            isDeposit
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                                : 'bg-rose-50 text-rose-700 border-rose-200'
+                        }`}
+                    >
+                        {isDeposit ? 'Kuweka' : 'Kutoa'}
+                    </span>
+                );
+            },
+        },
+        {
+            header: 'Akaunti',
+            className: 'min-w-[150px]',
+            render: (tx) => (
+                <div className="flex flex-col">
+                    <span className="font-semibold text-gray-900">{tx.account_number}</span>
+                    <span className="text-xs text-gray-400">{tx.account_name}</span>
+                </div>
+            ),
+        },
+        {
+            header: 'Kiasi',
+            className: 'text-right font-bold whitespace-nowrap',
+            render: (tx) => {
+                const isDeposit = tx.amount < 0;
+                const val = isDeposit ? Math.abs(tx.amount) : -tx.amount;
+                return (
+                    <span className={isDeposit ? 'text-emerald-600 font-bold' : 'text-rose-600 font-bold'}>
+                        {isDeposit ? '+' : ''}
+                        {formatCurrency(val)}
+                    </span>
+                );
+            },
+        },
+        {
+            header: 'Ada',
+            className: 'text-right whitespace-nowrap font-medium text-gray-500',
+            render: (tx) => <span>{formatCurrency(tx.fee || 0)}</span>,
+        },
+        {
+            header: 'Mrejea',
+            className: 'text-right whitespace-nowrap font-medium text-gray-500',
+            render: (tx) => <span>{formatCurrency(tx.commission || 0)}</span>,
+        },
+        {
+            header: 'Mteja',
+            className: 'whitespace-nowrap text-gray-600',
+            render: (tx) => <span>{tx.customer || tx.account_name}</span>,
+        },
+        {
+            header: 'Mtumiaji',
+            className: 'whitespace-nowrap font-bold text-gray-700 text-xs tracking-wider uppercase',
+            render: (tx) => <span>{tx.user?.name ? tx.user.name.toUpperCase() : 'N/A'}</span>,
+        },
+    ];
+
     return (
         <AppLayout user={user} title="Dashboard">
             {/* Header bar with Greeting and Filters */}
@@ -139,6 +241,19 @@ export default function Dashboard({ summary, user, filter }: Props) {
                         </div>
                     );
                 })}
+            </div>
+
+            {/* Latest 20 Transactions */}
+            <div className="mt-8">
+                <div className="mb-4">
+                    <h3 className="text-lg font-bold text-gray-900">Miamala 20 ya Hivi Karibuni</h3>
+                    <p className="text-sm text-gray-500">Orodha ya miamala ya mwisho kufanyika kwenye mfumo.</p>
+                </div>
+                <Table
+                    data={latestTransactions || []}
+                    columns={columns}
+                    emptyMessage="Hakuna miamala iliyopatikana kwenye mfumo."
+                />
             </div>
         </AppLayout>
     );
