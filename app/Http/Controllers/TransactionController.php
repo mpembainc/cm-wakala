@@ -2,46 +2,48 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiResponse;
 use App\Http\Requests\TransactionRequest;
-use App\Http\Resources\TransactionResource;
 use App\Models\Cash;
+use App\Models\Network;
 use App\Models\Transaction;
+use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Auth\Middleware\Authorize;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 
 class TransactionController extends Controller
 {
     public function index(Request $request)
     {
-        if (!auth()->user()->can('list_transactions'))
-            return ApiResponse::error(403);
+        if (!auth()->user()->can('list_transactions')) {
+            abort(403);
+        }
 
-        $today = Carbon::parse()->format('Y-m-d');
         $where = [];
-
-        if ($request->networkId)
+        if ($request->networkId) {
             $where['network_id'] = $request->networkId;
-        if ($request->userId)
+        }
+        if ($request->userId) {
             $where['user_id'] = $request->userId;
-        $query = Transaction::where($where);
+        }
+
+        $query = Transaction::with(['network', 'user'])->where($where);
 
         if ($request->startDate && !$request->endDate) {
             $query->whereDate('created_at', $request->startDate);
         }
-
         if (!$request->startDate && $request->endDate) {
             $query->whereDate('created_at', $request->endDate);
         }
-
         if ($request->startDate && $request->endDate) {
-            $query->where(function (Builder $builder) use ($request) {
-                $builder->whereDate('created_at', '>=', $request->startDate)
-                    ->whereDate('created_at', '<=', $request->endDate);
-            });
+            $query->whereBetween('created_at', [
+                Carbon::parse($request->startDate)->startOfDay(),
+                Carbon::parse($request->endDate)->endOfDay(),
+            ]);
         }
 
         if ($request->search && !empty($request->search)) {
@@ -56,17 +58,84 @@ class TransactionController extends Controller
             });
         }
 
-        if ((is_array($request->query()) && count($request->query()) == 0) || (!$request->startDate && !$request->endDate)) {
-            $query->whereDate('created_at', $today);
+        // If no filter parameters are passed, default to showing today's transactions!
+        if (empty($request->startDate) && empty($request->endDate) && empty($request->networkId) && empty($request->userId) && empty($request->search)) {
+            $query->whereDate('created_at', Carbon::today());
         }
 
         $transactions = $query->orderByDesc('id')->get();
 
-        return ApiResponse::success(TransactionResource::collection($transactions));
+        $user = Auth::user();
+        $permissions = $user->hasRole('admin')
+            ? Permission::all()->pluck('name')
+            : $user->getAllPermissions()->pluck('name');
+
+        $users = [];
+        if ($user->can('list_users')) {
+            $users = User::orderBy('name')->get(['id', 'name']);
+        }
+
+        return Inertia::render('transactions/index', [
+            'transactions' => $transactions->map(function ($t) {
+                return [
+                    'id' => $t->id,
+                    'network' => $t->network->name ?? 'UNKNOWN',
+                    'networkId' => $t->network_id,
+                    'accountNumber' => $t->account_number,
+                    'accountName' => $t->account_name,
+                    'amount' => floatval($t->amount),
+                    'customer' => $t->customer,
+                    'commission' => floatval($t->commission),
+                    'fee' => floatval($t->fee),
+                    'createdAt' => $t->created_at->toIso8601String(),
+                    'createdBy' => strtoupper($t->user->name ?? 'SYSTEM'),
+                ];
+            }),
+            'networks' => Network::getBalance()->map(function ($net) {
+                return [
+                    'id' => $net->id,
+                    'name' => $net->name,
+                    'balance' => floatval($net->balance),
+                ];
+            }),
+            'cashBalance' => floatval(Cash::getBalance()),
+            'users' => $users,
+            'filters' => [
+                'startDate' => $request->startDate ?? '',
+                'endDate' => $request->endDate ?? '',
+                'networkId' => $request->networkId ?? '',
+                'userId' => $request->userId ?? '',
+                'search' => $request->search ?? '',
+            ],
+            'user' => [
+                'name' => $user->name,
+                'permissions' => $permissions,
+            ],
+        ]);
     }
 
     public function store(TransactionRequest $request)
     {
+        if (!auth()->user()->can('add_transaction')) {
+            abort(403);
+        }
+
+        # Check Network Float balance is enough
+        $network = Network::find($request->networkId);
+        if (!$network) {
+            return redirect()->back()->withErrors(['networkId' => 'Mtandao haukupatikana.']);
+        }
+
+        // Calculate current network float balance
+        $currentBalance = floatval($network->transactions()->sum('amount'));
+        if ($currentBalance < floatval($request->amount)) {
+            return redirect()->back()->withErrors(['amount' => 'Salio la float kwenye mtandao halitoshi kufanya muamala huu.']);
+        }
+
+        // if (floatval($request->amount) <= 0) {
+        //     return redirect()->back()->withErrors(['amount' => 'Kiasi cha muamala lazima kiwe kikubwa kuliko 0.']);
+        // }
+
         #Save Network Transaction
         $transaction = new Transaction();
         $transaction->network_id = $request->networkId;
@@ -74,8 +143,8 @@ class TransactionController extends Controller
         $transaction->account_name = strtoupper($request->accountName);
         $transaction->amount = $request->amount > 0 ? -$request->amount : abs($request->amount);
         $transaction->customer = $request->customer ? strtoupper($request->customer) : strtoupper($request->accountName);
-        $transaction->commission = $request->commission;
-        $transaction->fee = $request->fee;
+        $transaction->commission = $request->commission ?? 0;
+        $transaction->fee = $request->fee ?? 0;
         $transaction->user_id = auth()->id();
         $transaction->save();
 
@@ -86,38 +155,30 @@ class TransactionController extends Controller
         $cash->user_id = auth()->id();
         $cash->save();
 
-        return ApiResponse::success(new TransactionResource($transaction));
+        return redirect()->back();
     }
 
     public function destroy($id)
     {
-        $network = Transaction::find($id);
-        if (!$network)
-            return ApiResponse::error(404);
-        $network->delete();
+        if (!auth()->user()->can('delete_transaction')) {
+            abort(403);
+        }
 
-        return ApiResponse::success(['message' => 'deleted']);
-    }
+        $transaction = Transaction::findOrFail($id);
 
-    public function update(Request $request, $id)
-    {
-        $transaction = Transaction::find($id);
-        if (!$transaction)
-            return ApiResponse::error(404);
+        // Delete associated Cash record first
+        Cash::where('transaction_id', $transaction->id)->delete();
+        $transaction->delete();
 
-        $transaction->network_id = $request->networkId;
-        $transaction->account_number = $request->accountNumber;
-        $transaction->account_name = $request->accountName;
-        $transaction->amount = $request->amount;
-        $transaction->customer = $request->customer;
-        $transaction->commission = $request->commission;
-        $transaction->save();
-
-        return ApiResponse::success(new TransactionResource($transaction));
+        return redirect()->back();
     }
 
     public function search(Request $request)
     {
+        if (!auth()->check()) {
+            return response()->json([]);
+        }
+
         $search = $request->query('q');
 
         if (!$search) {

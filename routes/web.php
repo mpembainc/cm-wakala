@@ -5,6 +5,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\CashController;
+use App\Http\Controllers\TransactionController;
 
 // Redirect root to dashboard
 Route::get('/', fn() => redirect('/dashboard'));
@@ -25,5 +26,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/cash', [CashController::class, 'index'])->name('cash.index');
     Route::post('/cash', [CashController::class, 'store'])->name('cash.store');
+
+    Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
+    Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
+    Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
+    Route::get('/accounts/search', [TransactionController::class, 'search'])->name('accounts.search');
 });
 
