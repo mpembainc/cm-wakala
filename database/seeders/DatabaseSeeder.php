@@ -12,5 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+        $allPermissions = \Spatie\Permission\Models\Permission::all();
+        $adminRole->syncPermissions($allPermissions);
     }
 }
