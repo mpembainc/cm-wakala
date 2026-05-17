@@ -54,7 +54,7 @@ export const FormReactSelect = forwardRef<any, FormReactSelectProps<any>>(
                             isFocused && "ring-2 ring-ring border-none",
                             error && "border-destructive ring-destructive",
                         ),
-                    placeholder: () => "text-muted-foreground",
+                    placeholder: () => "text-muted-foreground text-sm",
                     input: () =>
                         "bg-transparent border-0 focus:border-0 outline-none focus:outline-none focus-visible:outline-none ring-0 focus:ring-0 shadow-none appearance-none",
                     menu: () =>
