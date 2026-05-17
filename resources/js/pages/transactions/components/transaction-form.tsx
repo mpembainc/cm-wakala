@@ -1,15 +1,20 @@
 import { useForm } from '@inertiajs/react';
 import React, { useState, useEffect, useRef } from 'react';
 import { formatCurrency } from '@/utils';
-import { Input } from '@/components/ui/input';
 import { AccountSuggestion, Network } from '@/types';
 import FormInput from '@/components/forms/form-input';
 import FormNumber from '@/components/forms/form-number-input';
 import { FormReactSelect } from '@/components/forms/form-react-select';
+import { Button } from '@/components/ui/button';
 
 export interface Props {
     networks: Network[];
     cashBalance: number;
+}
+
+export interface SelectOption {
+    label: string | number;
+    value: any;
 }
 
 export default function TransactionForm({ networks, cashBalance }: Props) {
@@ -28,6 +33,7 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
     const [showDropdown, setShowDropdown] = useState(false);
     const [searching, setSearching] = useState(false);
     const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
+    const [selected, setSelected] = useState<SelectOption | null>(null);
 
     const amountInputRef = useRef<HTMLInputElement>(null);
 
@@ -217,8 +223,12 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
                 {/* Network Selection */}
                 <div className="w-full">
                     <FormReactSelect
-                        value={data.networkId}
-                        onChange={(e) => setData("networkId", e.target.value)}
+                        value={selected}
+                        onChange={(op) => {
+                            console.log("Selected network ID:", op);
+                            setData("networkId", op?.value);
+                            setSelected(op);
+                        }}
                         label='Chagua Mtandao (Network)'
                         options={networks.map((n) => ({
                             value: n.id,
@@ -272,26 +282,25 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
             </div>
 
             <div className="flex justify-end gap-2 pt-3 border-t border-gray-100">
-                <button
+                <Button
                     type="button"
+                    variant='destructive'
                     onClick={() => {
                         reset();
                         setSearchQuery("");
                         clearErrors();
                     }}
                     disabled={processing}
-                    className="px-4 py-2.5 rounded-xl text-sm font-bold border border-red-200 text-red-600 hover:bg-red-50 transition-colors select-none cursor-pointer disabled:opacity-50"
                 >
                     Futa Zote (Clear)
-                </button>
-                <button
+                </Button>
+                <Button
                     type="submit"
                     disabled={processing}
-                    className="px-6 py-2.5 rounded-xl text-sm font-bold bg-gray-900 text-white hover:bg-gray-800 transition-colors flex items-center gap-2 select-none cursor-pointer disabled:opacity-50"
                 >
-                    <SaveIcon className="w-4 h-4 shrink-0" />
+                    <SaveIcon />
                     Hifadhi Muamala
-                </button>
+                </Button>
             </div>
         </form>
     );
