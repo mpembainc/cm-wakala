@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NetworkController;
+use App\Http\Controllers\CashController;
 
 // Redirect root to dashboard
 Route::get('/', fn() => redirect('/dashboard'));
@@ -21,5 +22,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/networks', [NetworkController::class, 'store'])->name('networks.store');
     Route::put('/networks/{id}', [NetworkController::class, 'update'])->name('networks.update');
     Route::delete('/networks/{id}', [NetworkController::class, 'destroy'])->name('networks.destroy');
+
+    Route::get('/cash', [CashController::class, 'index'])->name('cash.index');
+    Route::post('/cash', [CashController::class, 'store'])->name('cash.store');
 });
 
