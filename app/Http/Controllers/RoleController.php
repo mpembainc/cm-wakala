@@ -2,56 +2,105 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\ApiResponse;
-use App\Http\Resources\PermissionResource;
-use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Inertia\Inertia;
 
 class RoleController extends Controller
 {
-    function index()
+    public function index()
     {
+        if (!auth()->user()->can('list_roles')) {
+            abort(403);
+        }
+
         $roles = Role::all();
-        return ApiResponse::success(RoleResource::collection($roles));
+        $user = auth()->user();
+        $permissions = $user->hasRole('admin')
+            ? Permission::all()->pluck('name')
+            : $user->getAllPermissions()->pluck('name');
+
+        return Inertia::render('roles/index', [
+            'roles' => $roles,
+            'user' => [
+                'name' => $user->name,
+                'permissions' => $permissions,
+            ],
+        ]);
     }
 
-    function show($roleId)
+    public function show($roleId)
     {
+        if (!auth()->user()->can('list_roles')) {
+            abort(403);
+        }
+
         $role = Role::findById($roleId, 'web');
         $permissions = $role->getAllPermissions();
         $unassignedPermissions = Permission::all()->whereNotIn('id', $permissions->pluck('id')->toArray())->values();
 
-        return ApiResponse::success([
-            'role' => new RoleResource($role),
-            'assigned' => PermissionResource::collection($permissions),
-            'unassigned' => PermissionResource::collection($unassignedPermissions)
+        $user = auth()->user();
+        $userPermissions = $user->hasRole('admin')
+            ? Permission::all()->pluck('name')
+            : $user->getAllPermissions()->pluck('name');
+
+        return Inertia::render('roles/permissions', [
+            'role' => $role,
+            'assigned' => $permissions,
+            'unassigned' => $unassignedPermissions,
+            'user' => [
+                'name' => $user->name,
+                'permissions' => $userPermissions,
+            ],
         ]);
     }
 
-    function store(Request $request)
+    public function store(Request $request)
     {
-        $request->validate(['name' => 'required|string']);
+        if (!auth()->user()->can('add_user')) {
+            abort(403);
+        }
 
-        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
-        return ApiResponse::success(new RoleResource($role));
+        $request->validate(['name' => 'required|string|max:255|unique:roles,name']);
+
+        Role::create(['name' => strtolower($request->name), 'guard_name' => 'web']);
+        
+        return redirect()->back()->with('success', 'Jukumu jipya limesajiliwa kikamilifu.');
     }
 
-    function update(Role $role, Request $request)
+    public function update($roleId, Request $request)
     {
-        $request->validate(['name' => 'required|string']);
-        $role->name = $request->name;
+        if (!auth()->user()->can('add_user')) {
+            abort(403);
+        }
+
+        $request->validate(['name' => 'required|string|max:255|unique:roles,name,' . $roleId]);
+        
+        $role = Role::findById($roleId, 'web');
+        $role->name = strtolower($request->name);
         $role->save();
 
-        return ApiResponse::success(new RoleResource($role));
+        return redirect()->back()->with('success', 'Jukumu limesasishwa kikamilifu.');
     }
 
-    function givePermission(Request $request)
+    public function givePermission(Request $request)
     {
-        $role = Role::findById($request->role, 'web');
-        $role->syncPermissions($request->permissions);
+        if (!auth()->user()->can('add_user')) {
+            abort(403);
+        }
 
-        return ApiResponse::success(['message' => 'success']);
+        $request->validate([
+            'role' => 'required|exists:roles,id',
+            'permissions' => 'nullable|array',
+        ]);
+
+        $role = Role::findById($request->role, 'web');
+        
+        // Sync permissions
+        $permissions = Permission::whereIn('id', $request->permissions ?? [])->get();
+        $role->syncPermissions($permissions);
+
+        return redirect()->route('roles.index')->with('success', 'Ruhusa za jukumu zimesasishwa kikamilifu.');
     }
 }

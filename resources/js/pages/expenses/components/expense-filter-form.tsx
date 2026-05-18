@@ -38,11 +38,10 @@ export default function ExpenseFilterForm({ filters, onChange }: Props) {
     };
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mb-4 bg-gray-50/50 rounded-xl p-4 border border-gray-100">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mb-4">
             <div className="md:col-span-6">
                 <FormInput
-                    label="Tafuta Maelezo (Search)"
-                    placeholder="Andika kufanya utafutaji..."
+                    placeholder="Tafuta..."
                     value={filters.search}
                     onChange={(e) => onChange({ ...filters, search: e.target.value })}
                 />
@@ -50,7 +49,6 @@ export default function ExpenseFilterForm({ filters, onChange }: Props) {
             
             <div className="md:col-span-6">
                 <FormInput
-                    label="Chagua Mwezi (Month)"
                     type="month"
                     value={getMonthInputValue(filters.month)}
                     onChange={(e) => handleMonthChange(e.target.value)}

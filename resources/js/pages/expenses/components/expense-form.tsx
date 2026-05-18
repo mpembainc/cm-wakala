@@ -1,8 +1,9 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
-import FormInput from '../../../components/forms/form-input';
-import FormNumber from '../../../components/forms/form-number-input';
-import { Button } from '../../../components/ui/button';
+import FormInput from '@/components/forms/form-input';
+import FormNumber from '@/components/forms/form-number-input';
+import { Button } from '@/components/ui/button';
+import { SaveIcon } from 'lucide-react';
 
 export default function ExpenseForm() {
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
@@ -13,7 +14,7 @@ export default function ExpenseForm() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        
+
         post('/expenses', {
             onSuccess: () => {
                 reset('amount', 'name');
@@ -23,7 +24,7 @@ export default function ExpenseForm() {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200/80 p-5 shadow-xs">
+        <form onSubmit={handleSubmit} className="bg-white rounded-md border border-gray-200/80 p-5 shadow-xs">
             <h3 className="text-sm font-bold text-gray-900 mb-4 uppercase tracking-wider font-sans select-none border-b border-gray-100 pb-2">
                 Sajili Matumizi Mpya (Add Expense)
             </h3>
@@ -62,9 +63,9 @@ export default function ExpenseForm() {
                 <div className="md:col-span-2">
                     <Button
                         type="submit"
-                        disabled={processing}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-sm font-bold h-9.5 rounded-lg transition-colors cursor-pointer"
-                    >
+                        className='rounded-lg'
+                        disabled={processing}>
+                            <SaveIcon />
                         {processing ? 'Inahifadhi...' : 'Hifadhi'}
                     </Button>
                 </div>
