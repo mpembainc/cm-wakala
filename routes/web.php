@@ -6,6 +6,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NetworkController;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\UserController;
 
 // Redirect root to dashboard
 Route::get('/', fn() => redirect('/dashboard'));
@@ -31,5 +33,16 @@ Route::middleware('auth')->group(function () {
     Route::post('/transactions', [TransactionController::class, 'store'])->name('transactions.store');
     Route::delete('/transactions/{id}', [TransactionController::class, 'destroy'])->name('transactions.destroy');
     Route::get('/accounts/search', [TransactionController::class, 'search'])->name('accounts.search');
+
+    // Expenses
+    Route::get('/expenses', [ExpenseController::class, 'index'])->name('expenses.index');
+    Route::post('/expenses', [ExpenseController::class, 'store'])->name('expenses.store');
+
+    // Users
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::post('/users/assign-role', [UserController::class, 'assignRole'])->name('users.assign-role');
+    Route::post('/users/reset-password', [UserController::class, 'reset_password'])->name('users.reset-password');
 });
 
