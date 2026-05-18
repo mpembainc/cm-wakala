@@ -1,5 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import React from 'react';
+import FormInput from '@/components/forms/form-input';
 
 interface Props {
     onSuccess?: () => void;
@@ -22,49 +23,37 @@ export default function CashForm({ onSuccess }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-gray-200/85 p-5 shadow-xs transition-all mb-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-md border border-gray-200/85 p-5 shadow-xs transition-all mb-6">
             <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wider mb-4 select-none">
                 Sajili Muamala wa Cash (Kuingiza / Kutoa)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                <div className="w-full">
-                    <label htmlFor="amount" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 select-none">
-                        Kiasi (TZS)
-                    </label>
-                    <input
-                        id="amount"
-                        type="number"
-                        step="0.01"
-                        placeholder="E.g., 50000"
-                        value={data.amount}
-                        onChange={(e) => setData('amount', e.target.value)}
-                        className={`w-full px-4 py-2.5 rounded-xl border text-sm font-semibold text-gray-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${
-                            errors.amount ? 'border-red-300 bg-red-50/50 text-red-900' : 'border-gray-200 focus:border-gray-900 bg-gray-50/20'
-                        }`}
+                <FormInput
+                    id="amount"
+                    label="Kiasi (TZS)"
+                    type="number"
+                    step="0.01"
+                    placeholder="E.g., 50000"
+                    value={data.amount}
+                    onChange={(e) => setData('amount', e.target.value)}
+                    error={errors.amount}
+                    disabled={processing}
+                    required
+                    containerClassName="w-full"
+                />
+                <div className="w-full md:col-span-2 flex flex-col md:flex-row gap-4 items-end">
+                    <FormInput
+                        id="description"
+                        label="Maelezo / Remark"
+                        type="text"
+                        placeholder="E.g., Mtaji wa Kuanzia au Matumizi ya Ofisi"
+                        value={data.description}
+                        onChange={(e) => setData('description', e.target.value)}
+                        error={errors.description}
                         disabled={processing}
                         required
+                        containerClassName="flex-1 w-full"
                     />
-                    {errors.amount && <p className="mt-1.5 text-xs font-semibold text-red-600">{errors.amount}</p>}
-                </div>
-                <div className="w-full md:col-span-2 flex flex-col md:flex-row gap-4 items-end">
-                    <div className="flex-1 w-full">
-                        <label htmlFor="description" className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 select-none">
-                            Maelezo / Remark
-                        </label>
-                        <input
-                            id="description"
-                            type="text"
-                            placeholder="E.g., Mtaji wa Kuanzia au Matumizi ya Ofisi"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            className={`w-full px-4 py-2.5 rounded-xl border text-sm font-semibold text-gray-800 transition-colors focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 ${
-                                errors.description ? 'border-red-300 bg-red-50/50 text-red-900' : 'border-gray-200 focus:border-gray-900 bg-gray-50/20'
-                            }`}
-                            disabled={processing}
-                            required
-                        />
-                        {errors.description && <p className="mt-1.5 text-xs font-semibold text-red-600">{errors.description}</p>}
-                    </div>
                     <button
                         type="submit"
                         disabled={processing}
