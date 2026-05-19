@@ -1,0 +1,24 @@
+name: Deploy Wakala App on Push
+on:
+  push:
+    branches: ["master"]
+jobs:
+  build:
+    name: Deploying
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pulling the Project files
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.REMOTE_KEY }}
+          port: ${{ secrets.REMOTE_PORT }}
+          script: |
+            cd ${{secrets.REMOTE_PATH}}
+            git pull
+            php artisan migrate --force
+            php artisan db:seed --class=PermissionSeeder --force
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan optimize

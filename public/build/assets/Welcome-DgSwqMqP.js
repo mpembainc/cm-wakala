@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-JGi548TJ.js";var t=e();function n(){return(0,t.jsx)(`div`,{className:`flex justify-center items-center h-screen`,children:(0,t.jsx)(`div`,{className:`text-center`,children:(0,t.jsx)(`h1`,{className:`text-4xl font-bold`,children:`Welcome to Wakala API`})})})}export{n as default};
