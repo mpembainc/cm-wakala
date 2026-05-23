@@ -21,7 +21,7 @@ const FormInput = ({
 }: Props) => {
   return (
     <div className={cn("space-y-1", containerClassName)}>
-      <Label className='uppercase text-xs font-bold text-gray-600'>{label}</Label>
+      <Label className='uppercase text-[11px] font-semibold text-gray-500'>{label}</Label>
       <Input {...props} type={type} />
       <FormError error={error} />
       {text && !error && (

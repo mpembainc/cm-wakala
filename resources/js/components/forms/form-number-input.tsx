@@ -30,7 +30,7 @@ const FormNumber = ({
 }: Props) => {
   return (
       <div className="space-y-1">
-          <Label className="uppercase text-xs font-bold text-gray-600">
+          <Label className="uppercase text-[11px] font-semibold text-gray-500">
               {label}
           </Label>
           <NumericFormat

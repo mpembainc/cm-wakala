@@ -18,7 +18,7 @@ export const FormReactSelect = forwardRef<any, FormReactSelectProps<any>>(
   ({ className, error, ...props }, ref) => {
     return (
         <div className={cn("space-y-1")}>
-            <Label className="uppercase text-xs font-bold text-gray-600">
+            <Label className="uppercase text-[11px] font-semibold text-gray-500">
                 {props.label}
             </Label>
             <ReactSelect
@@ -51,7 +51,7 @@ export const FormReactSelect = forwardRef<any, FormReactSelectProps<any>>(
                             "flex w-full h-9 rounded-sm border border-input hover:border-input-hover bg-background px-3 py-[2px] text-sm transition-colors",
                             "placeholder:text-muted-foreground focus-visible:outline-none",
                             "disabled:cursor-not-allowed disabled:opacity-50",
-                            isFocused && "ring-2 ring-ring border-none",
+                            isFocused && "border-ring ring-ring border-2",
                             error && "border-destructive ring-destructive",
                         ),
                     placeholder: () => "text-muted-foreground text-sm",

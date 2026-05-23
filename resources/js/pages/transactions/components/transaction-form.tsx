@@ -5,14 +5,8 @@ import { AccountSuggestion, Network } from '@/types';
 import FormInput from '@/components/forms/form-input';
 import FormNumber from '@/components/forms/form-number-input';
 import { FormReactSelect } from '@/components/forms/form-react-select';
+import FormSelect from '@/components/forms/form-select';
 import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -33,6 +27,12 @@ export interface SelectOption {
     label: string | number;
     value: any;
 }
+
+const TRANSACTION_TYPE_OPTIONS: SelectOption[] = [
+    { label: 'KUWEKA (DEPOSIT)', value: 'KUWEKA' },
+    { label: 'KUTOA (WITHDRAWAL)', value: 'KUTOA' },
+    { label: 'FLOAT PURCHASE', value: 'FLOAT' },
+];
 
 export default function TransactionForm({ networks, cashBalance }: Props) {
     const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
@@ -324,25 +324,15 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
 
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
                     {/* Transaction Type */}
-                    <div className="w-full">
-                        <label className="block uppercase text-xs font-bold text-gray-600 mb-1 select-none">
-                            Aina ya Muamala
-                        </label>
-                        <Select
-                            value={transactionType}
-                            onValueChange={(val: 'KUWEKA' | 'KUTOA' | 'FLOAT') => setTransactionType(val)}
-                            disabled={processing}
-                        >
-                            <SelectTrigger className="w-full h-9.5 rounded-sm border border-input hover:border-input-hover px-3 bg-transparent text-sm transition-colors focus:outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/90">
-                                <SelectValue placeholder="Chagua aina" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="KUWEKA">KUWEKA (DEPOSIT)</SelectItem>
-                                <SelectItem value="KUTOA">KUTOA (WITHDRAWAL)</SelectItem>
-                                <SelectItem value="FLOAT">FLOAT PURCHASE</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
+                    <FormSelect
+                        label="Aina ya Muamala"
+                        placeholder="aina"
+                        value={transactionType}
+                        onValueChange={(val) => setTransactionType(val as 'KUWEKA' | 'KUTOA' | 'FLOAT')}
+                        disabled={processing}
+                        options={TRANSACTION_TYPE_OPTIONS}
+                        containerClassname="w-full"
+                    />
 
                     {/* Amount */}
                     <FormNumber

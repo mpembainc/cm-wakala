@@ -33,7 +33,7 @@ const FormSelect = ({
 }: Props) => {
   return (
       <div className={cn("space-y-1", containerClassname)}>
-          <Label className="uppercase text-xs font-bold text-gray-600">
+          <Label className="uppercase text-[11px] font-semibold text-gray-500">
               {label}
           </Label>
           <Select value={value} {...props}>

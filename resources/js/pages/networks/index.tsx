@@ -1,5 +1,5 @@
 import AppLayout from '@/layouts/AppLayout';
-import { formatCurrency } from '@/utils';
+import { formatNumber } from '@/utils';
 import React, { useState, useMemo } from 'react';
 import NetworkForm from './components/networkform';
 import { router } from '@inertiajs/react';
@@ -40,18 +40,15 @@ export default function Networks({ networks, user }: Props) {
         () => [
             {
                 header: 'Na.',
-                id: 'index',
-                cell: ({ row }: { row: any }) => <span className="text-gray-400 font-semibold select-none">#{row.index + 1}</span>,
+                accessorFn: (_, index) => index + 1
             },
             {
                 header: 'Jina la Mtandao / Bank',
                 accessorKey: 'name',
-                cell: ({ row }: { row: any }) => <span className="font-bold text-gray-900 uppercase tracking-wide">{row.original.name}</span>,
             },
             {
                 header: 'Salio la Float',
-                accessorKey: 'balance',
-                cell: ({ row }: { row: any }) => <span className="font-bold text-emerald-600 text-sm whitespace-nowrap">{formatCurrency(row.original.balance)}</span>,
+                accessorFn: (row) => formatNumber(row.balance)
             },
             ...(canUpdateNetwork || canDeleteNetwork
                 ? [
@@ -108,14 +105,14 @@ export default function Networks({ networks, user }: Props) {
 
             <div className="bg-white rounded-md border border-gray-200/80 p-5 shadow-xs space-y-4">
                 {/* Search Bar */}
-                <div className="relative max-w-md w-full">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                <div className="relative max-w-xs w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none" />
                     <Input
                         type="text"
                         placeholder="Tafuta mtandao..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 h-9.5 w-full text-sm font-semibold bg-gray-50/20 rounded-md border border-input hover:border-input-hover"
+                        className="pl-9"
                     />
                 </div>
 
