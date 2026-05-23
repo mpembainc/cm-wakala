@@ -66,9 +66,9 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
     useEffect(() => {
         const num = Number(displayAmount);
         if (!isNaN(num) && num > 0 && transactionType) {
-            // KUWEKA -> Negative under the hood (controller turns it positive)
-            // KUTOA & FLOAT -> Positive under the hood (controller turns it negative)
-            const signed = transactionType === 'KUWEKA' ? -num : num;
+            // KUWEKA -> Positive under the hood (controller turns it negative)
+            // KUTOA & FLOAT -> Negative under the hood (controller turns it positive)
+            const signed = transactionType === 'KUWEKA' ? num : -num;
             setData('amount', String(signed));
         } else {
             setData('amount', '');
@@ -114,13 +114,14 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
         }
 
         const amountNum = Number(displayAmount);
+
         if (isNaN(amountNum) || amountNum <= 0) {
             alert("Kiasi lazima kiwe kikubwa kuliko 0.");
             return;
         }
 
-        // Float validation: Only KUTOA and FLOAT can deplete selected network float balance
-        if (transactionType !== 'KUWEKA' && selectedNetwork && selectedNetwork.balance < amountNum) {
+        // Float validation: Only KUWEKA (Deposit) depletes physical float balance
+        if (transactionType === 'KUWEKA' && selectedNetwork && selectedNetwork.balance < amountNum) {
             alert(`Salio la float kwenye ${selectedNetwork.name} halitoshi! Salio lililopo: ${formatCurrency(selectedNetwork.balance)}`);
             return;
         }

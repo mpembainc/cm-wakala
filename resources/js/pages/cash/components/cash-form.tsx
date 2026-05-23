@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import React from 'react';
 import FormInput from '@/components/forms/form-input';
+import FormNumber from '@/components/forms/form-number-input';
 
 interface Props {
     onSuccess?: () => void;
@@ -28,18 +29,14 @@ export default function CashForm({ onSuccess }: Props) {
                 Sajili Muamala wa Cash (Kuingiza / Kutoa)
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                <FormInput
+                <FormNumber
                     id="amount"
                     label="Kiasi (TZS)"
-                    type="number"
-                    step="0.01"
                     placeholder="E.g., 50000"
                     value={data.amount}
-                    onChange={(e) => setData('amount', e.target.value)}
+                    onChange={(value) => setData('amount', String(value))}
                     error={errors.amount}
                     disabled={processing}
-                    required
-                    containerClassName="w-full"
                 />
                 <div className="w-full md:col-span-2 flex flex-col md:flex-row gap-4 items-end">
                     <FormInput
