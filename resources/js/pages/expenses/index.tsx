@@ -7,6 +7,7 @@ import ExpenseFilterForm from './components/expense-filter-form';
 import { useMemo } from 'react';
 import { ColumnDef } from '@tanstack/react-table';
 import DataTable from '@/components/table/data-table';
+import BalanceBanner from '@/components/ui/balance-banner';
 
 interface Expense {
     id: number;
@@ -72,6 +73,7 @@ export default function ExpensesIndex({ expenses, filters, user }: Props) {
                         Rekodi na udhibiti matumizi yote ya ofisi kuu kwa urahisi.
                     </p>
                 </div>
+                <BalanceBanner label="Jumla ya Matumizi" balance={displayedTotal} variant="amber" />
             </div>
 
             {canAddExpense && (
@@ -81,18 +83,10 @@ export default function ExpensesIndex({ expenses, filters, user }: Props) {
             )}
 
             <div className="bg-white rounded-lg border border-gray-200/80 p-5 shadow-xs space-y-2">
-                <div className='flex justify-between items-center'>
-                    <ExpenseFilterForm
-                        filters={filters}
-                        onChange={handleFilterChange}
-                    />
-                    <div className='flex justify-end items-center gap-1'>
-                        <span className='text-sm font-bold text-gray-700'>JUMLA KUU:</span>
-                        <span className='text-lg font-bold text-gray-800'>
-                            {formatCurrency(displayedTotal)}
-                        </span>
-                    </div>
-                </div>
+                <ExpenseFilterForm
+                    filters={filters}
+                    onChange={handleFilterChange}
+                />
 
                 {/* Table Data */}
                 <DataTable

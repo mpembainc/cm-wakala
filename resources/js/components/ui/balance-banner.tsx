@@ -33,7 +33,7 @@ const variantStyles = {
 export default function BalanceBanner({ label, balance, variant = 'emerald' }: BalanceBannerProps) {
     const styles = variantStyles[variant];
     return (
-        <div className={`border rounded-2xl px-5 py-3 flex flex-col items-end shadow-xs shrink-0 select-none ${styles.container}`}>
+        <div className={`border rounded-xl px-5 py-3 flex flex-col items-end shadow-xs shrink-0 select-none ${styles.container}`}>
             <span className={`text-[10px] font-bold uppercase tracking-wider font-sans ${styles.label}`}>
                 {label}
             </span>
