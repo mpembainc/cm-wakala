@@ -48,7 +48,7 @@ export const FormReactSelect = forwardRef<any, FormReactSelectProps<any>>(
                 classNames={{
                     control: ({ isFocused }) =>
                         cn(
-                            "flex w-full h-9 rounded-sm border border-gray-300 bg-background px-3 py-[2px] text-sm transition-colors",
+                            "flex w-full h-9 rounded-sm border border-input hover:border-input-hover bg-background px-3 py-[2px] text-sm transition-colors",
                             "placeholder:text-muted-foreground focus-visible:outline-none",
                             "disabled:cursor-not-allowed disabled:opacity-50",
                             isFocused && "ring-2 ring-ring border-none",

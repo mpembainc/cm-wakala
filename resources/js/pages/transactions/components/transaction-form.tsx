@@ -333,7 +333,7 @@ export default function TransactionForm({ networks, cashBalance }: Props) {
                             onValueChange={(val: 'KUWEKA' | 'KUTOA' | 'FLOAT') => setTransactionType(val)}
                             disabled={processing}
                         >
-                            <SelectTrigger className="w-full h-9.5 rounded-sm border border-gray-300 px-3 bg-transparent text-sm transition-colors focus:outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/90">
+                            <SelectTrigger className="w-full h-9.5 rounded-sm border border-input hover:border-input-hover px-3 bg-transparent text-sm transition-colors focus:outline-none focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/90">
                                 <SelectValue placeholder="Chagua aina" />
                             </SelectTrigger>
                             <SelectContent>

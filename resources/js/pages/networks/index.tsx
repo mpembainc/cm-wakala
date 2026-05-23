@@ -115,7 +115,7 @@ export default function Networks({ networks, user }: Props) {
                         placeholder="Tafuta mtandao..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="pl-9 h-9.5 w-full text-sm font-semibold bg-gray-50/20 rounded-md border border-gray-300"
+                        className="pl-9 h-9.5 w-full text-sm font-semibold bg-gray-50/20 rounded-md border border-input hover:border-input-hover"
                     />
                 </div>
 

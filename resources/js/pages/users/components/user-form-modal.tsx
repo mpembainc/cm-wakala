@@ -81,7 +81,7 @@ export default function UserFormModal({ roles, open, onOpenChange }: Props) {
                                 value={data.role}
                                 onValueChange={(val) => setData('role', val)}
                             >
-                                <SelectTrigger className="h-9 w-full bg-white rounded-lg border-input">
+                                <SelectTrigger className="h-9 w-full bg-white rounded-lg border border-input hover:border-input-hover">
                                     <SelectValue placeholder="Chagua Jukumu" />
                                 </SelectTrigger>
                                 <SelectContent>

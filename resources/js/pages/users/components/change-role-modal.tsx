@@ -74,7 +74,7 @@ export default function ChangeRoleModal({ user, roles, open, onOpenChange }: Pro
                                 value={data.role}
                                 onValueChange={(val) => setData('role', val)}
                             >
-                                <SelectTrigger className="h-9.5 w-full bg-white rounded-lg border-input">
+                                <SelectTrigger className="h-9.5 w-full bg-white rounded-lg border border-input hover:border-input-hover">
                                     <SelectValue placeholder="Chagua Jukumu" />
                                 </SelectTrigger>
                                 <SelectContent>

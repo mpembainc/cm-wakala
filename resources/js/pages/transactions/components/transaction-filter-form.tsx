@@ -51,7 +51,7 @@ export default function TransactionFilterForm({ filters, networks, users, canLis
                     placeholder="Jina, Namba, Kiasi..."
                     value={filters.search}
                     onChange={(e) => handleFilterChange('search', e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-input hover:border-input-hover text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
                 />
             </div>
 
@@ -64,7 +64,7 @@ export default function TransactionFilterForm({ filters, networks, users, canLis
                     id="networkId"
                     value={filters.networkId}
                     onChange={(e) => handleFilterChange('networkId', e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-input hover:border-input-hover text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
                 >
                     <option value="">Mitandao yote</option>
                     {networks.map((n) => (
@@ -85,7 +85,7 @@ export default function TransactionFilterForm({ filters, networks, users, canLis
                     type="date"
                     value={filters.startDate}
                     onChange={(e) => handleFilterChange('startDate', e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-input hover:border-input-hover text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
                 />
             </div>
 
@@ -99,7 +99,7 @@ export default function TransactionFilterForm({ filters, networks, users, canLis
                     type="date"
                     value={filters.endDate}
                     onChange={(e) => handleFilterChange('endDate', e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
+                    className="w-full px-3.5 py-2 rounded-xl border border-input hover:border-input-hover text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
                 />
             </div>
 
@@ -113,7 +113,7 @@ export default function TransactionFilterForm({ filters, networks, users, canLis
                         id="userId"
                         value={filters.userId}
                         onChange={(e) => handleFilterChange('userId', e.target.value)}
-                        className="w-full px-3.5 py-2 rounded-xl border border-gray-200 text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
+                        className="w-full px-3.5 py-2 rounded-xl border border-input hover:border-input-hover text-xs font-semibold text-gray-700 bg-white focus:outline-hidden focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors"
                     >
                         <option value="">Wote</option>
                         {users.map((u) => (

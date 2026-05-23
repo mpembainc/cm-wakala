@@ -203,7 +203,7 @@ export default function UsersIndex({ users, roles, user }: Props) {
                         placeholder="Tafuta kwa Jina au Username..."
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-gray-200 text-sm font-semibold text-gray-850 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors bg-gray-50/20"
+                        className="w-full pl-10 pr-4 py-2 rounded-xl border border-input hover:border-input-hover text-sm font-semibold text-gray-850 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-gray-900 transition-colors bg-gray-50/20"
                     />
                 </div>
 

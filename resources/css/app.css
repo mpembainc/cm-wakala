@@ -33,6 +33,9 @@
     --color-chart-1: var(--chart-1);
     --color-ring: var(--ring);
     --color-input: var(--input);
+    --color-input-hover: var(--input-hover);
+    --color-primary-button: var(--primary-button);
+    --color-primary-button-hover: var(--primary-button-hover);
     --color-border: var(--border);
     --color-destructive: var(--destructive);
     --color-accent-foreground: var(--accent-foreground);
@@ -74,8 +77,11 @@
     --accent: oklch(0.97 0 0);
     --accent-foreground: oklch(0.205 0 0);
     --destructive: oklch(0.577 0.245 27.325);
-    --border: oklch(0.922 0 0);
-    --input: oklch(0.922 0 0);
+    --border: #d9d9d9;
+    --input: #d0d5dd;
+    --input-hover: #b1b5c3;
+    --primary-button: #3f51b5;
+    --primary-button-hover: #32408f;
     --ring: oklch(0.5 0.134 242.749);
     --chart-1: oklch(0.855 0.138 181.071);
     --chart-2: oklch(0.704 0.14 182.503);
@@ -111,6 +117,9 @@
     --destructive: oklch(0.704 0.191 22.216);
     --border: oklch(1 0 0 / 10%);
     --input: oklch(1 0 0 / 15%);
+    --input-hover: oklch(1 0 0 / 25%);
+    --primary-button: #3f51b5;
+    --primary-button-hover: #32408f;
     --ring: oklch(0.556 0 0);
     --chart-1: oklch(0.855 0.138 181.071);
     --chart-2: oklch(0.704 0.14 182.503);

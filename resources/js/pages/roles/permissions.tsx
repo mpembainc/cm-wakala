@@ -119,7 +119,7 @@ export default function RolePermissions({ role, assigned, unassigned, user }: Pr
                             placeholder="Tafuta Ruhusa (Search)..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-gray-200 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all placeholder:text-gray-400 font-medium"
+                            className="w-full pl-9 pr-4 py-2 text-sm bg-gray-50 border border-input hover:border-input-hover rounded-xl focus:bg-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all placeholder:text-gray-400 font-medium"
                         />
                     </div>
 

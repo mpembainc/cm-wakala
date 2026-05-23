@@ -47,7 +47,7 @@ export default function Login() {
                             autoComplete="username"
                             className={`w-full px-4 py-2.5 rounded-lg border text-sm text-gray-800 bg-gray-50 outline-none transition
                                 focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                                ${errors.username ? 'border-red-400' : 'border-gray-300'}`}
+                                ${errors.username ? 'border-red-400' : 'border-input hover:border-input-hover'}`}
                         />
                         {errors.username && (
                             <p className="mt-1 text-xs text-red-500">{errors.username}</p>
@@ -67,7 +67,7 @@ export default function Login() {
                             autoComplete="current-password"
                             className={`w-full px-4 py-2.5 rounded-lg border text-sm text-gray-800 bg-gray-50 outline-none transition
                                 focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                                ${errors.password ? 'border-red-400' : 'border-gray-300'}`}
+                                ${errors.password ? 'border-red-400' : 'border-input hover:border-input-hover'}`}
                         />
                         {errors.password && (
                             <p className="mt-1 text-xs text-red-500">{errors.password}</p>
