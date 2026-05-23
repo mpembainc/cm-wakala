@@ -7,6 +7,7 @@ import CashFilterForm from './components/cash-filter-form';
 import { CashTransaction, User } from '@/types';
 import DataTable from '@/components/table/data-table';
 import { ColumnDef } from '@tanstack/react-table';
+import BalanceBanner from '@/components/ui/balance-banner';
 
 interface Props {
     transactions: CashTransaction[];
@@ -75,11 +76,7 @@ export default function CashIndex({ transactions, balance, users, filters, user 
                     <p className="text-sm text-gray-500">Fuatilia na urekodi miamala yote ya fedha taslimu (cash) na salio lililopo ofisini.</p>
                 </div>
 
-                {/* Total Cash Balance Badge */}
-                <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-3 flex flex-col items-end shadow-xs shrink-0 select-none">
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider font-sans">Salio la Cash (Office)</span>
-                    <span className="text-xl font-extrabold text-emerald-700 font-mono">{formatCurrency(balance)}</span>
-                </div>
+                <BalanceBanner label="Salio la Cash (Office)" balance={balance} />
             </div>
 
             {canAddCashTransaction && (

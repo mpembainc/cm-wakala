@@ -11,6 +11,7 @@ import FormSelect from '@/components/forms/form-select';
 import { SaveIcon } from 'lucide-react';
 import { ColumnDef } from '@tanstack/react-table';
 import DataTable from '@/components/table/data-table';
+import BalanceBanner from '@/components/ui/balance-banner';
 
 interface Commission {
     id: number;
@@ -118,14 +119,7 @@ export default function CommissionsIndex({ commissions, networks, balance, filte
                     </p>
                 </div>
 
-                <div className="bg-emerald-50 border border-emerald-200 rounded-lg px-5 py-3 flex flex-col items-end shadow-xs shrink-0 select-none">
-                    <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider font-sans">
-                        COMMISION YA MWEZI HUU
-                    </span>
-                    <span className="text-xl font-extrabold text-emerald-700 font-mono">
-                        {formatCurrency(balance)}
-                    </span>
-                </div>
+                <BalanceBanner label="Commission ya mwezi huu" balance={balance} />
             </div>
 
             {/* Form to add commission */}
@@ -206,14 +200,6 @@ export default function CommissionsIndex({ commissions, networks, balance, filte
                             value={getMonthInputValue(filters.month)}
                             onChange={(e) => handleMonthChange(e.target.value)}
                         />
-                    </div>
-                    <div className="flex items-center gap-1.5 shrink-0 select-none">
-                        <span className="text-sm font-bold text-gray-700">
-                            JUMLA KUU HAU:
-                        </span>
-                        <span className="text-lg font-bold text-gray-800">
-                            {formatCurrency(balance)}
-                        </span>
                     </div>
                 </div>
 

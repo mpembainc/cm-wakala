@@ -9,6 +9,7 @@ import { ColumnDef } from '@tanstack/react-table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2, Search } from 'lucide-react';
+import BalanceBanner from '@/components/ui/balance-banner';
 
 interface Props {
     networks: Network[];
@@ -18,6 +19,8 @@ interface Props {
 export default function Networks({ networks, user }: Props) {
     const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
     const [searchQuery, setSearchQuery] = useState('');
+
+    const totalFloat = useMemo(() => networks.reduce((sum, n) => sum + Number(n.balance), 0), [networks]);
 
     const canAddNetwork = user.permissions.includes('add_network');
     const canUpdateNetwork = user.permissions.includes('update_network');
@@ -89,9 +92,12 @@ export default function Networks({ networks, user }: Props) {
 
     return (
         <AppLayout user={user} title="Mitandao na Banks">
-            <div className="mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Usimamizi wa Mitandao na Banks</h2>
-                <p className="text-sm text-gray-500">Sajili au hariri salio na taarifa za mitandao au benki zinazotumika kwenye mfumo.</p>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                <div>
+                    <h2 className="text-xl font-bold text-gray-900">Usimamizi wa Mitandao na Banks</h2>
+                    <p className="text-sm text-gray-500">Sajili au hariri salio na taarifa za mitandao au benki zinazotumika kwenye mfumo.</p>
+                </div>
+                <BalanceBanner label="Jumla ya Float (Mitandao)" balance={totalFloat} variant="indigo" />
             </div>
 
             {canAddNetwork && (
