@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DlICjYNW.js";import{t}from"./react-number-format.es-BEG_W4mZ.js";var n=e(),r=({value:e,...r})=>(0,n.jsx)(t,{...r,value:e,displayType:`text`,thousandSeparator:!0});export{r as t};

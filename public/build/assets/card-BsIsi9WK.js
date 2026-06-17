@@ -1,0 +1,1 @@
+import{a as e}from"./app-D5cbB7Ke.js";import{t}from"./jsx-runtime-DlICjYNW.js";import{t as n}from"./utils-D4vrCEhI.js";e();var r=t();function i({className:e,as:t=`div`,...i}){return(0,r.jsx)(t,{"data-slot":`card`,className:n(`bg-white rounded-lg border border-gray-200/80 p-5 shadow-xs`,e),...i})}export{i as t};
