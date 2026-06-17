@@ -10,6 +10,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ReportViewController;
 
 // Redirect root to dashboard
 Route::get('/', fn() => redirect('/dashboard'));
@@ -57,5 +58,14 @@ Route::middleware('auth')->group(function () {
     Route::put('/roles/{id}', [RoleController::class, 'update'])->name('roles.update');
     Route::get('/roles/{id}/permissions', [RoleController::class, 'show'])->name('roles.permissions');
     Route::post('/roles/assign-permissions', [RoleController::class, 'givePermission'])->name('roles.assign-permissions');
+
+    // Reports
+    Route::get('/reports/user-transactions', [ReportViewController::class, 'user_transactions'])->name('reports.user-transactions');
+    Route::get('/reports/financial-position', [ReportViewController::class, 'financial_position'])->name('reports.financial-position');
+    Route::get('/reports/commissions', [ReportViewController::class, 'commissions'])->name('reports.commissions');
+    Route::get('/reports/profit', [ReportViewController::class, 'profit'])->name('reports.profit');
+    Route::get('/reports/network-commissions', [ReportViewController::class, 'network_commissions'])->name('reports.network-commissions');
+    Route::get('/reports/network-transactions', [ReportViewController::class, 'network_transactions'])->name('reports.network-transactions');
+    Route::get('/reports/deposit-withdrawal', [ReportViewController::class, 'deposit_withdrawal'])->name('reports.deposit-withdrawal');
 });
 

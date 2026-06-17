@@ -23,15 +23,41 @@ export default function AppLayout({ children, user, title }: Props) {
         { href: '/commissions', label: 'Commissions', icon: HandshakeIcon, permission: 'view_commissions' },
         { href: '/cash', label: 'Cash', icon: WalletIcon, permission: 'view_cash_transactions' },
         { href: '/expenses', label: 'Expenses', icon: ReceiptIcon, permission: 'view_expenses' },
-        { href: '/reports', label: 'Reports', icon: ChartIcon, permission: 'show_user_transactions_report' },
+        {
+            label: 'Reports',
+            icon: ChartIcon,
+            permission: 'show_user_transactions_report',
+            children: [
+                { href: '/reports/user-transactions', label: 'Miamala kwa User', permission: 'show_user_transactions_report' },
+                { href: '/reports/financial-position', label: 'Financial Position', permission: 'show_financial_position_report' },
+                { href: '/reports/commissions', label: 'Commission Jumla', permission: 'show_commission_report' },
+                { href: '/reports/profit', label: 'Faida na Hasara', permission: 'show_commission_report' },
+                { href: '/reports/network-commissions', label: 'Commission Mtandao', permission: 'show_commission_report' },
+                { href: '/reports/network-transactions', label: 'Miamala ya Mtandao', permission: 'show_transactions_report' },
+                { href: '/reports/deposit-withdrawal', label: 'Kuweka na Kutoa', permission: 'show_transaction_summary' },
+            ]
+        },
         { href: '/users', label: 'Users', icon: UsersIcon, permission: 'list_users' },
         { href: '/roles', label: 'Roles & Perms', icon: ShieldIcon, permission: 'list_roles' },
     ];
 
-    const navItems = allNavItems.filter(item => {
-        if (!item.permission) return true;
-        return user.permissions.includes(item.permission);
-    });
+    const navItems = allNavItems
+        .filter(item => {
+            if (!item.permission) return true;
+            return user.permissions.includes(item.permission);
+        })
+        .map(item => {
+            if (item.children) {
+                return {
+                    ...item,
+                    children: item.children.filter(child => {
+                        if (!child.permission) return true;
+                        return user.permissions.includes(child.permission);
+                    })
+                };
+            }
+            return item;
+        });
 
     return (
         <div className="h-screen flex overflow-hidden bg-gray-100">
@@ -54,7 +80,7 @@ export default function AppLayout({ children, user, title }: Props) {
             >
                 {/* Logo */}
                 <div className="flex items-center gap-3 px-4 h-14 border-b border-white/10 shrink-0">
-                    <img src="/logo.jpg" alt="logo" className="w-8 h-8 rounded-lg object-cover" />
+                    <img src="/logo.png" alt="logo" className="w-8 h-8 rounded-lg object-cover" />
                     <span className="text-white font-semibold text-sm leading-tight truncate">
                         {import.meta.env.VITE_APP_NAME}
                     </span>
@@ -62,12 +88,25 @@ export default function AppLayout({ children, user, title }: Props) {
 
                 {/* Nav — scrollable */}
                 <nav className="flex-1 overflow-y-auto px-3 py-3 space-y-0.5">
-                    {navItems.map(({ href, label, icon: Icon }) => {
-                        const isActive = url.startsWith(href);
+                    {navItems.map((item) => {
+                        if (item.children) {
+                            const isChildActive = item.children.some(child => url.startsWith(child.href));
+                            return (
+                                <SidebarDropdown 
+                                    key={item.label} 
+                                    item={item} 
+                                    url={url} 
+                                    initialOpen={isChildActive} 
+                                />
+                            );
+                        }
+
+                        const Icon = item.icon;
+                        const isActive = url.startsWith(item.href);
                         return (
                             <Link
-                                key={href}
-                                href={href}
+                                key={item.href}
+                                href={item.href}
                                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors group ${
                                     isActive
                                         ? 'bg-white/10 text-white font-medium'
@@ -77,7 +116,7 @@ export default function AppLayout({ children, user, title }: Props) {
                                 <Icon className={`w-4 h-4 shrink-0 transition-opacity ${
                                     isActive ? 'opacity-100' : 'opacity-70 group-hover:opacity-100'
                                 }`} />
-                                {label}
+                                {item.label}
                             </Link>
                         );
                     })}
@@ -232,3 +271,56 @@ function ShieldIcon({ className }: { className?: string }) {
         </svg>
     );
 }
+
+function SidebarDropdown({ item, url, initialOpen }: { item: any, url: string, initialOpen: boolean }) {
+    const [isOpen, setIsOpen] = useState(initialOpen);
+    const Icon = item.icon;
+
+    return (
+        <div className="space-y-1">
+            <button
+                type="button"
+                onClick={() => setIsOpen(!isOpen)}
+                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors group text-gray-400 hover:bg-white/10 hover:text-white outline-none cursor-pointer ${
+                    isOpen ? 'text-white' : ''
+                }`}
+            >
+                <div className="flex items-center gap-3">
+                    <Icon className="w-4 h-4 shrink-0 opacity-70 group-hover:opacity-100" />
+                    <span>{item.label}</span>
+                </div>
+                <svg
+                    className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+            
+            {isOpen && (
+                <div className="pl-7 space-y-1">
+                    {item.children.map((child: any) => {
+                        const isActive = url === child.href || url.startsWith(child.href + '?') || url.startsWith(child.href + '/');
+                        return (
+                            <Link
+                                key={child.href}
+                                href={child.href}
+                                className={`block px-3 py-2 rounded-lg text-xs transition-colors ${
+                                    isActive
+                                        ? 'bg-white/10 text-white font-medium'
+                                        : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                                }`}
+                            >
+                                {child.label}
+                            </Link>
+                        );
+                    })}
+                </div>
+            )}
+        </div>
+    );
+}
+

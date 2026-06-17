@@ -1,6 +1,7 @@
 import AppLayout from '../../layouts/AppLayout';
 import { formatCurrency, formatDate } from '../../utils';
 import Table, { Column } from '../../components/Table';
+import { ArrowUpDown, CircleDollarSign, Banknote, Server } from 'lucide-react';
 
 interface Summary {
     transactionCount: number;
@@ -42,14 +43,14 @@ export default function Dashboard({ summary, user, filter, latestTransactions }:
                       value: summary.transactionCount,
                       type: 'count' as const,
                       color: 'yellow',
-                      icon: TransactionIcon,
+                      icon: ArrowUpDown,
                   },
                   {
                       label: 'Salio la Float',
                       value: summary.floatBalance,
                       type: 'currency' as const,
                       color: 'green',
-                      icon: FloatIcon,
+                      icon: CircleDollarSign,
                   },
               ]
             : []),
@@ -60,7 +61,7 @@ export default function Dashboard({ summary, user, filter, latestTransactions }:
                       value: summary.cashBalance,
                       type: 'currency' as const,
                       color: 'blue',
-                      icon: CashIcon,
+                      icon: Banknote,
                   },
               ]
             : []),
@@ -71,7 +72,7 @@ export default function Dashboard({ summary, user, filter, latestTransactions }:
                       value: summary.networkCount,
                       type: 'count' as const,
                       color: 'purple',
-                      icon: NetworkIcon,
+                      icon: Server,
                   },
               ]
             : []),
@@ -171,16 +172,6 @@ export default function Dashboard({ summary, user, filter, latestTransactions }:
             render: (tx) => <span>{formatCurrency(tx.fee || 0)}</span>,
         },
         {
-            header: 'Mrejea',
-            className: 'text-right whitespace-nowrap font-medium text-gray-500',
-            render: (tx) => <span>{formatCurrency(tx.commission || 0)}</span>,
-        },
-        {
-            header: 'Mteja',
-            className: 'whitespace-nowrap text-gray-600',
-            render: (tx) => <span>{tx.customer || tx.account_name}</span>,
-        },
-        {
             header: 'Mtumiaji',
             className: 'whitespace-nowrap font-bold text-gray-700 text-xs tracking-wider uppercase',
             render: (tx) => <span>{tx.user?.name ? tx.user.name.toUpperCase() : 'N/A'}</span>,
@@ -256,38 +247,5 @@ export default function Dashboard({ summary, user, filter, latestTransactions }:
                 />
             </div>
         </AppLayout>
-    );
-}
-
-// ---- inline icons ----
-function TransactionIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M7 16V4m0 0L3 8m4-4l4 4M17 8v12m0 0l4-4m-4 4l-4-4" />
-        </svg>
-    );
-}
-function FloatIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-    );
-}
-function CashIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-        </svg>
-    );
-}
-function NetworkIcon({ className }: { className?: string }) {
-    return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <rect x="2" y="2" width="20" height="8" rx="2" />
-            <rect x="2" y="14" width="20" height="8" rx="2" />
-            <line x1="6" y1="6" x2="6.01" y2="6" strokeLinecap="round" strokeWidth={3} />
-            <line x1="6" y1="18" x2="6.01" y2="18" strokeLinecap="round" strokeWidth={3} />
-        </svg>
     );
 }
